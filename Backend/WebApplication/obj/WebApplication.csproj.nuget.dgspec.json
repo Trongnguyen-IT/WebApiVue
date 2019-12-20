@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\YoongProjects\\WebApplication\\Backend\\WebApplication\\WebApplication.csproj": {}
+    "C:\\YoongProjects\\WebApiVue\\Backend\\WebApplication\\WebApplication.csproj": {}
   },
   "projects": {
-    "C:\\YoongProjects\\WebApplication\\Backend\\WebApplication\\WebApplication.csproj": {
+    "C:\\YoongProjects\\WebApiVue\\Backend\\WebApplication\\WebApplication.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\YoongProjects\\WebApplication\\Backend\\WebApplication\\WebApplication.csproj",
+        "projectUniqueName": "C:\\YoongProjects\\WebApiVue\\Backend\\WebApplication\\WebApplication.csproj",
         "projectName": "WebApplication",
-        "projectPath": "C:\\YoongProjects\\WebApplication\\Backend\\WebApplication\\WebApplication.csproj",
+        "projectPath": "C:\\YoongProjects\\WebApiVue\\Backend\\WebApplication\\WebApplication.csproj",
         "packagesPath": "C:\\Users\\Yoong\\.nuget\\packages\\",
-        "outputPath": "C:\\YoongProjects\\WebApplication\\Backend\\WebApplication\\obj\\",
+        "outputPath": "C:\\YoongProjects\\WebApiVue\\Backend\\WebApplication\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Yoong\\AppData\\Roaming\\NuGet\\NuGet.Config",
