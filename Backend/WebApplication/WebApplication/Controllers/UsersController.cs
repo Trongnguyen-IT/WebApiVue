@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using T.Core;
+using T.Dto;
 using T.Services;
 
 namespace T.Controllers
@@ -24,9 +25,9 @@ namespace T.Controllers
 
         [AllowAnonymous]
         [HttpPost("authenticate")]
-        public IActionResult Authenticate([FromBody]User userParam)
+        public IActionResult Authenticate([FromBody]AuthenticateModel userParam)
         {
-            var user = _userService.Authenticate(userParam.Username, userParam.Password);
+            var user = _userService.Authenticate(userParam.UserNameOrEmailAddress, userParam.Password);
 
             if (user == null)
                 return BadRequest(new { message = "Username or password is incorrect" });

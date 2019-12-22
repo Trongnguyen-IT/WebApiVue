@@ -6,9 +6,8 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
-using System.Threading.Tasks;
+using T.AuthenticationConfig;
 using T.Core;
-using T.Helpers;
 
 namespace T.Services
 {
@@ -20,11 +19,11 @@ namespace T.Services
             new User { Id = 1, FirstName = "Test", LastName = "User", Username = "test", Password = "test" }
         };
 
-        private readonly AppSettings _appSettings;
+        private readonly Authentication appSettings;
 
-        public UserService(IOptions<AppSettings> appSettings)
+        public UserService(IOptions<Authentication> appSettings)
         {
-            _appSettings = appSettings.Value;
+            this.appSettings = appSettings.Value;
         }
 
         public User Authenticate(string username, string password)
@@ -35,20 +34,8 @@ namespace T.Services
             if (user == null)
                 return null;
 
-            // authentication successful so generate jwt token
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(new Claim[]
-                {
-                    new Claim(ClaimTypes.Name, user.Id.ToString())
-                }),
-                Expires = DateTime.UtcNow.AddDays(7),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-            };
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-            user.Token = tokenHandler.WriteToken(token);
+            var accessToken = CreateAccessToken(user, TimeSpan.FromDays(7));
+            user.Token = accessToken;
 
             // remove password before returning
             user.Password = null;
@@ -59,10 +46,34 @@ namespace T.Services
         public IEnumerable<User> GetAll()
         {
             // return users without passwords
-            return _users.Select(x => {
+            return _users.Select(x =>
+            {
                 x.Password = null;
                 return x;
             });
+        }
+
+        //private string CreateAccessToken(IEnumerable<Claim> claims, TimeSpan? expiration = null)
+        private string CreateAccessToken(User user, TimeSpan? expiration = null)
+        {
+            var now = DateTime.UtcNow;
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.ASCII.GetBytes(appSettings.JwtBearer.SecurityKey);
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(new Claim[]
+                {
+                    new Claim(ClaimTypes.Name, user.Id.ToString())
+                }),
+                Issuer = appSettings.JwtBearer.Issuer,
+                Audience = appSettings.JwtBearer.Audience,
+                Expires = now.Add(expiration ?? TimeSpan.FromDays(7)),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+            };
+
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+
+            return tokenHandler.WriteToken(token);
         }
     }
 }
